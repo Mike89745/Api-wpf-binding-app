@@ -7,6 +7,106 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ListView Margin="10" ItemsSource="{Binding users,UpdateSourceTrigger=PropertyChanged}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <TextBlock Text="ID: " />
+                        <TextBlock Text="{Binding ID}" FontWeight="Bold" />
+                        <TextBlock Text=", " />
+                        <TextBlock Text="name: " />
+                        <TextBlock Text="{Binding name}" FontWeight="Bold" />
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView Margin="10" x:Name="Items" Grid.Column="1" Grid.Row="1"  ItemsSource="{Binding items,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem,UpdateSourceTrigger=PropertyChanged}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <TextBlock Text="Name: " />
+                        <TextBlock Text="{Binding name}" FontWeight="Bold" />
+                        <TextBlock Text=", " />
+                        <TextBlock Text="price: " />
+                        <TextBlock Text="{Binding price}" FontWeight="Bold" />
+                        <TextBlock Text="price: " />
+                        <TextBlock Text="{Binding description}"/>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Content="item name" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Margin="0,5,10,5" Text="{Binding itemName,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Grid.Column="1">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding itemNameCheck}" Value="True">
+                                <Setter Property="Foreground" Value="Black"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding itemNameCheck}" Value="False">
+                                <Setter Property="Foreground" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <Label Content="item price" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Margin="0,5,10,5" Text="{Binding itemPrice,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="1">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding itemPriceCheck}" Value="True">
+                                <Setter Property="Foreground" Value="Black"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding itemPriceCheck}" Value="False">
+                                <Setter Property="Foreground" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <Label Content="item description" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Grid.RowSpan="3" Margin="0,5,10,5"/>
+            <TextBox Text="{Binding itemDescription,UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Grid.RowSpan="3" Margin="0,5,10,5">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding itemDescriptionCheck}" Value="True">
+                                <Setter Property="Foreground" Value="Black"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding itemDescriptionCheck}" Value="False">
+                                <Setter Property="Foreground" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <Button Content="add item" Grid.Column="1" Margin="125,5,10,5" Grid.Row="5" Command="{Binding RelayCreateItem}"/>
+            <Button Content="Update item" Grid.Column="1" Margin="5,5,130,5" Grid.Row="5" Command="{Binding RelayUpdateItem}"/>
+        </Grid>
+
+
     </Grid>
 </Window>
