@@ -5,13 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="900" Width="1600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -28,22 +32,47 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ListView Margin="10" x:Name="Items" Grid.Column="1" Grid.Row="1"  ItemsSource="{Binding items,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem,UpdateSourceTrigger=PropertyChanged}">
+        <Grid Grid.Column="1" Grid.Row="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="6*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ListView Margin="10" x:Name="Items" ItemsSource="{Binding items,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+                            <TextBlock Text="Name: " />
+                            <TextBlock Text="{Binding name}" FontWeight="Bold" />
+                            <TextBlock Text=", " />
+                            <TextBlock Text="   price: " />
+                            <TextBlock Text="{Binding price}" FontWeight="Bold" />
+                            <TextBlock Text="   description: " />
+                            <TextBlock Text="{Binding description}"/>
+                        </WrapPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Content="Add item to Order" Grid.Column="1" Margin="250,5,10,5" Grid.Row="5" Command="{Binding RelayCreateItem}"/>
+        </Grid>
+        <ListView Margin="10"  Grid.Column="1" Grid.Row="2"  x:Name="OrderItems" ItemsSource="{Binding OrderItems,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding OrderSelectedItem}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <WrapPanel>
                         <TextBlock Text="Name: " />
                         <TextBlock Text="{Binding name}" FontWeight="Bold" />
                         <TextBlock Text=", " />
-                        <TextBlock Text="price: " />
+                        <TextBlock Text="   price: " />
                         <TextBlock Text="{Binding price}" FontWeight="Bold" />
-                        <TextBlock Text="price: " />
+                        <TextBlock Text="   description: " />
                         <TextBlock Text="{Binding description}"/>
                     </WrapPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
+        
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
@@ -106,7 +135,8 @@
             <Button Content="add item" Grid.Column="1" Margin="125,5,10,5" Grid.Row="5" Command="{Binding RelayCreateItem}"/>
             <Button Content="Update item" Grid.Column="1" Margin="5,5,130,5" Grid.Row="5" Command="{Binding RelayUpdateItem}"/>
         </Grid>
-
+       
+       
 
     </Grid>
 </Window>

@@ -27,5 +27,12 @@ namespace WpfApp1
             InitializeComponent();
             DataContext = new Viewmodel();
         }
+
+        private void Items_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var Newitem = (ListBox)sender;
+            var Itemsasd = (Item)Newitem.SelectedItem;
+            Debug.WriteLine(Itemsasd.description);
+        }
     }
 }
