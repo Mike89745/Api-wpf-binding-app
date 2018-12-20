@@ -192,7 +192,7 @@ namespace WpfApp1
         }
         public void addItemToOrderList()
         {
-            _selectedItems.Add(_selectedItem);
+            _OrderItems.Add(_selectedItem);
         }
         public void createUser(string nick, string password, string email)
         {
