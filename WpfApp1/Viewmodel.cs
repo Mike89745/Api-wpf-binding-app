@@ -17,7 +17,7 @@ namespace WpfApp1
         private List<User> _users;
         private List<Order> _orders;
         private List<Item> _items;
-        private List<Item> _OrderItems;
+        private List<Item> _OrderItems = new List<Item>();
         private string _itemName;
         private bool _itemNameCheck;
         private string _itemPrice;
@@ -28,37 +28,14 @@ namespace WpfApp1
 
         private Item _selectedItem;
         private Item _OrderSelectedItem;
-        public Item SelectedItem
-        {
-            get => _selectedItem;
-            set
-            {
-                _selectedItem = value;
-                if (_selectedItem != null)
-                {
-                    itemName = _selectedItem.name;
-                    itemPrice = _selectedItem.price.ToString();
-                    itemDescription = _selectedItem.description;
-                }
-
-                OnPropertyChanged("SelectedItem");
-            }
-        }
-        public Item OrderSelectedItem
-        {
-            get => _OrderSelectedItem;
-            set
-            {
-                _OrderSelectedItem = value;
-                OnPropertyChanged("OrderSelectedItem");
-            }
-        }
+       
         public RelayCommand RelayItemsSelectionChanged { get; private set; }
         public RelayCommand RelayCreateItem { get; private set; }
         public RelayCommand RelayGetItems { get; private set; }
         public RelayCommand RelayUpdateItem { get; private set; }
         public RelayCommand RelayDeleteItem { get; private set; }
         public RelayCommand RelayAddItemToOrder { get; private set; }
+        public RelayCommand RelayCreateOrder { get; private set; }
         public Viewmodel()
         {
             getItems();
@@ -115,6 +92,31 @@ namespace WpfApp1
             {
                 _items = value;
                 OnPropertyChanged("items");
+            }
+        }
+        public Item SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+                if (_selectedItem != null)
+                {
+                    itemName = _selectedItem.name;
+                    itemPrice = _selectedItem.price.ToString();
+                    itemDescription = _selectedItem.description;
+                }
+
+                OnPropertyChanged("SelectedItem");
+            }
+        }
+        public Item OrderSelectedItem
+        {
+            get => _OrderSelectedItem;
+            set
+            {
+                _OrderSelectedItem = value;
+                OnPropertyChanged("OrderSelectedItem");
             }
         }
         public List<Item> OrderItems
@@ -188,12 +190,12 @@ namespace WpfApp1
         {
             var Newitem = (ListBox)sender;
             var Itemsasd = (Item)Newitem.SelectedItem;
-            Debug.WriteLine(Itemsasd.description);
         }
         public void addItemToOrderList()
         {
             _OrderItems.Add(_selectedItem);
         }
+      
         public void createUser(string nick, string password, string email)
         {
             api.addUser(nick, password, email);
@@ -214,9 +216,9 @@ namespace WpfApp1
         {
             responseMsg = await api.deleteUser(user.ID);
         }
-        public void createOrder(List<string> items)
+        public void createOrder()
         {
-            api.addOrder(_user.ID, items);
+            api.addOrder(user.ID, OrderItems);
         }
         public async void getUserOrders()
         {

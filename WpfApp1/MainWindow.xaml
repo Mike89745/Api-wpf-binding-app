@@ -55,24 +55,44 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Content="Add item to Order" Grid.Column="1" Margin="250,5,10,5" Grid.Row="5" Command="{Binding RelayCreateItem}"/>
+            <Button Content="Add item to Order" Grid.Column="1" Margin="250,5,10,5" Grid.Row="5" Command="{Binding RelayAddItemToOrder}"/>
         </Grid>
-        <ListView Margin="10"  Grid.Column="1" Grid.Row="2"  x:Name="OrderItems" ItemsSource="{Binding OrderItems,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding OrderSelectedItem}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <WrapPanel>
-                        <TextBlock Text="Name: " />
-                        <TextBlock Text="{Binding name}" FontWeight="Bold" />
-                        <TextBlock Text=", " />
-                        <TextBlock Text="   price: " />
-                        <TextBlock Text="{Binding price}" FontWeight="Bold" />
-                        <TextBlock Text="   description: " />
-                        <TextBlock Text="{Binding description}"/>
-                    </WrapPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        
+        <Grid Grid.Column="1" Grid.Row="2" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="6*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label FontWeight="Bold" FontSize="16">Order</Label>
+            <ListView Margin="10"  Grid.Column="0" Grid.Row="1"  x:Name="OrderItems" ItemsSource="{Binding OrderItems,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding OrderSelectedItem}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+                            <TextBlock Text="Name: " />
+                            <TextBlock Text="{Binding name}" FontWeight="Bold" />
+                            <TextBlock Text=", " />
+                            <TextBlock Text="   price: " />
+                            <TextBlock Text="{Binding price}" FontWeight="Bold" />
+                            <TextBlock Text="   description: " />
+                            <TextBlock Text="{Binding description}"/>
+                        </WrapPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Margin="5,2,5,2">Remove Item</Button>
+                <Button Margin="5,2,5,2" Grid.Column="3">Create Order</Button>
+            </Grid>
+        </Grid>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
@@ -132,7 +152,7 @@
                     </Style>
                 </TextBox.Style>
             </TextBox>
-            <Button Content="add item" Grid.Column="1" Margin="125,5,10,5" Grid.Row="5" Command="{Binding RelayCreateItem}"/>
+            <Button Content="Add new item" Grid.Column="1" Margin="125,5,10,5" Grid.Row="5" Command="{Binding RelayCreateItem}"/>
             <Button Content="Update item" Grid.Column="1" Margin="5,5,130,5" Grid.Row="5" Command="{Binding RelayUpdateItem}"/>
         </Grid>
        

@@ -113,15 +113,20 @@ namespace WpfApp1
                 return Encoding.UTF8.GetString(response);
             }
         }
-        public string addOrder(string userID,List<string> items)
+        public string addOrder(string userID,List<Item> items)
         {
+            List<string> itemsIDs = new List<string>();
+            foreach (var item in items)
+            {
+                itemsIDs.Add(item.ID);
+            }
             using (var wb = new WebClient())
             {
                 DateTime date = DateTime.Now;
                 var data = new NameValueCollection();
                 data["userID"] = userID;
                 data["date"] = date.ToLongDateString() + " " + date.ToLongTimeString();
-                data["items"] = JsonConvert.SerializeObject(items);
+                data["items"] = JsonConvert.SerializeObject(itemsIDs);
                 var response = wb.UploadValues("https://student.sps-prosek.cz/~mikesma15/Database/objednavky/addOrder.php", "POST", data);
                 return Encoding.UTF8.GetString(response);
             }
