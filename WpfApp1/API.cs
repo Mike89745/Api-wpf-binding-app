@@ -14,7 +14,17 @@ namespace WpfApp1
     public class API
     {
         static HttpClient client = new HttpClient();
-
+        public User loginUser(string nick, string password)
+        {
+            using (var wb = new WebClient())
+            {
+                var data = new NameValueCollection();
+                data["nick"] = nick;
+                data["password"] = password;
+                var response = wb.UploadValues("https://student.sps-prosek.cz/~mikesma15/Database/objednavky/userLogin.php", "POST", data);
+                return JsonConvert.DeserializeObject<User>(Encoding.UTF8.GetString(response));
+            }
+        }
         public async Task<User> GetUser(string ID)
         {
             List<User> user = new List<User>();
@@ -156,7 +166,7 @@ namespace WpfApp1
         public async Task<string> deleteOrder(string ID)
         {
             string res = " ";
-            HttpResponseMessage response = await client.GetAsync("https://student.sps-prosek.cz/~mikesma15/Database/objednavky/deleteOrder.php?ID=" + ID);
+            HttpResponseMessage response = await client.GetAsync("https://student.sps-prosek.cz/~mikesma15/Database/objednavky/deleteOrder.php?del=" + ID);
             if (response.IsSuccessStatusCode)
             {
                 res = JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());

@@ -11,5 +11,9 @@ namespace WpfApp1
         public string ID { get; set; }
         public string userID { get; set; }
         public List<Item> items { get; set; }
+        public List<int> itemsAmount { get; set; }
+        public int TotalPrice { get; set; }
+        public string date { get; set; }
     }
+    
 }

@@ -25,10 +25,11 @@ namespace WpfApp1
         private string _itemDescription;
         private bool _itemDescriptionCheck;
         private string _responseMsg;
-
+        private string _Username;
+        private string _UserPassword;
         private Item _selectedItem;
         private Item _OrderSelectedItem;
-       
+        private Order _ordersSelectedItem;
         public RelayCommand RelayItemsSelectionChanged { get; private set; }
         public RelayCommand RelayCreateItem { get; private set; }
         public RelayCommand RelayGetItems { get; private set; }
@@ -36,6 +37,9 @@ namespace WpfApp1
         public RelayCommand RelayDeleteItem { get; private set; }
         public RelayCommand RelayAddItemToOrder { get; private set; }
         public RelayCommand RelayCreateOrder { get; private set; }
+        public RelayCommand RelayRemoveItemFromOrder { get; private set; }
+        public RelayCommand RelayLoginUser { get; private set; }
+        public RelayCommand RelayDeteleUserOrder { get; private set; }
         public Viewmodel()
         {
             getItems();
@@ -48,7 +52,10 @@ namespace WpfApp1
             RelayUpdateItem = new RelayCommand(this.updateItem);
             RelayDeleteItem = new RelayCommand(this.deleteItem);
             RelayAddItemToOrder = new RelayCommand(this.addItemToOrderList);
-            //RelayItemsSelectionChanged = new RelayCommand<object>(ItemsSelectionChanged);
+            RelayCreateOrder = new RelayCommand(this.createOrder);
+            RelayRemoveItemFromOrder = new RelayCommand(this.RemoveItemFromOrderList);
+            RelayLoginUser = new RelayCommand(this.LoginUser);
+            RelayDeteleUserOrder = new RelayCommand(this.deleteOrder);
         }
         public string responseMsg
         {
@@ -108,6 +115,15 @@ namespace WpfApp1
                 }
 
                 OnPropertyChanged("SelectedItem");
+            }
+        }
+        public Order ordersSelectedItem
+        {
+            get => _ordersSelectedItem;
+            set
+            {
+                _ordersSelectedItem = value;
+                OnPropertyChanged("ordersSelectedItem");
             }
         }
         public Item OrderSelectedItem
@@ -186,16 +202,42 @@ namespace WpfApp1
                 OnPropertyChanged("itemDescriptionCheck");
             }
         }
+        public string Username
+        {
+            get => _Username;
+            set
+            {
+                _Username = value;
+                OnPropertyChanged("Username");
+            }
+        }
+        public string UserPassword
+        {
+            get => _UserPassword;
+            set
+            {
+                _UserPassword = value;
+                OnPropertyChanged("UserPassword");
+            }
+        }
         public void ItemsSelectionChanged(object sender)
         {
             var Newitem = (ListBox)sender;
             var Itemsasd = (Item)Newitem.SelectedItem;
         }
+        public void LoginUser()
+        {
+            _user = api.loginUser(_Username, _UserPassword);
+            getUserOrders();
+        }
         public void addItemToOrderList()
         {
             _OrderItems.Add(_selectedItem);
         }
-      
+        public void RemoveItemFromOrderList()
+        {
+            _OrderItems.Remove(_OrderSelectedItem);
+        }
         public void createUser(string nick, string password, string email)
         {
             api.addUser(nick, password, email);
@@ -232,18 +274,21 @@ namespace WpfApp1
         {
             //api.updateOrder(order);
         }
-        public async void deleteOrder(Order order)
+        public async void deleteOrder()
         {
-            responseMsg = await api.deleteOrder(order.ID);
+            responseMsg = await api.deleteOrder(ordersSelectedItem.ID);
+            for (int i = 0; i < _orders.Count; i++)
+            {
+                if(_orders[i].ID == ordersSelectedItem.ID)
+                {
+                    _orders.RemoveAt(i);
+                    break;
+                }
+            }
         }
         public async void getItems()
         {
             items = await api.getAllItems();
-            Debug.WriteLine("ietm");
-            foreach (var item in items)
-            {
-                Debug.WriteLine(item.name);
-            }
         }
         public void CheckItem()
         {
