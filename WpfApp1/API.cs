@@ -111,6 +111,23 @@ namespace WpfApp1
                 return Encoding.UTF8.GetString(response);
             }
         }
+        public string updateOrder(Order order)
+        {
+            Debug.WriteLine(order.ID);
+            List<string> itemsIDs = new List<string>();
+            foreach (var item in order.items)
+            {
+                itemsIDs.Add(item.ID);
+            }
+            using (var wb = new WebClient())
+            {
+                var data = new NameValueCollection();
+                data["del"] = order.ID;
+                data["items"] = JsonConvert.SerializeObject(itemsIDs);
+                var response = wb.UploadValues("https://student.sps-prosek.cz/~mikesma15/Database/objednavky/updateOrder.php ", "POST", data);
+                return Encoding.UTF8.GetString(response);
+            }
+        }
         public string addUser(string nickname,string password,string email)
         {
             using (var wb = new WebClient())
@@ -177,7 +194,7 @@ namespace WpfApp1
         {
             string res = " ";
             List<User> user = new List<User>();
-            HttpResponseMessage response = await client.GetAsync("https://student.sps-prosek.cz/~mikesma15/Database/objednavky/deleteItem.php?ID=" + ID);
+            HttpResponseMessage response = await client.GetAsync("https://student.sps-prosek.cz/~mikesma15/Database/objednavky/deteleItem.php?del=" + ID);
             if (response.IsSuccessStatusCode)
             {
                 res = JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());

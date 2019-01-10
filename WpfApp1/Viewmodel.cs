@@ -14,10 +14,12 @@ namespace WpfApp1
     {
         public API api = new API();
         private User _user;
+
         private List<User> _users;
         private List<Order> _orders;
         private List<Item> _items;
         private List<Item> _OrderItems = new List<Item>();
+
         private string _itemName;
         private bool _itemNameCheck;
         private string _itemPrice;
@@ -27,9 +29,11 @@ namespace WpfApp1
         private string _responseMsg;
         private string _Username;
         private string _UserPassword;
+
         private Item _selectedItem;
         private Item _OrderSelectedItem;
         private Order _ordersSelectedItem;
+        private int _userOrdersSelectedItem;
         public RelayCommand RelayItemsSelectionChanged { get; private set; }
         public RelayCommand RelayCreateItem { get; private set; }
         public RelayCommand RelayGetItems { get; private set; }
@@ -40,6 +44,8 @@ namespace WpfApp1
         public RelayCommand RelayRemoveItemFromOrder { get; private set; }
         public RelayCommand RelayLoginUser { get; private set; }
         public RelayCommand RelayDeteleUserOrder { get; private set; }
+        public RelayCommand RelayRemoveItemFromSelectedOrder { get; private set; }
+        public RelayCommand RelayRemoveUpdateSelectedOrder { get; private set; }
         public Viewmodel()
         {
             getItems();
@@ -56,6 +62,8 @@ namespace WpfApp1
             RelayRemoveItemFromOrder = new RelayCommand(this.RemoveItemFromOrderList);
             RelayLoginUser = new RelayCommand(this.LoginUser);
             RelayDeteleUserOrder = new RelayCommand(this.deleteOrder);
+            RelayRemoveItemFromSelectedOrder = new RelayCommand(this.removeItemFromSelectedOrder);
+            RelayRemoveUpdateSelectedOrder = new RelayCommand(this.updateOrder);
         }
         public string responseMsg
         {
@@ -133,6 +141,15 @@ namespace WpfApp1
             {
                 _OrderSelectedItem = value;
                 OnPropertyChanged("OrderSelectedItem");
+            }
+        }
+        public int userOrdersSelectedItem
+        {
+            get => _userOrdersSelectedItem;
+            set
+            {
+                _userOrdersSelectedItem = value;
+                OnPropertyChanged("userOrdersSelectedItem");
             }
         }
         public List<Item> OrderItems
@@ -229,14 +246,23 @@ namespace WpfApp1
         {
             _user = api.loginUser(_Username, _UserPassword);
             getUserOrders();
+            getUsers();
         }
         public void addItemToOrderList()
         {
-            _OrderItems.Add(_selectedItem);
+            OrderItems.Add(_selectedItem);
         }
         public void RemoveItemFromOrderList()
         {
-            _OrderItems.Remove(_OrderSelectedItem);
+         /*   for (int i = 0; i < OrderItems.Count; i++)
+            {
+                if(OrderItems[i].ID == _OrderSelectedItem.ID)
+                {
+                    OrderItems.RemoveAt(i);
+                    break;
+                }
+            }
+            */
         }
         public void createUser(string nick, string password, string email)
         {
@@ -261,6 +287,7 @@ namespace WpfApp1
         public void createOrder()
         {
             api.addOrder(user.ID, OrderItems);
+            getUserOrders();
         }
         public async void getUserOrders()
         {
@@ -270,21 +297,23 @@ namespace WpfApp1
         {
             orders = await api.getAllOrders();
         }
-        public void updateOrder(Order order)
+        public void removeItemFromSelectedOrder()
         {
-            //api.updateOrder(order);
+            _ordersSelectedItem.items.RemoveAt(userOrdersSelectedItem);
+        }
+        public void updateOrder()
+        {
+            foreach (Item item in ordersSelectedItem.items)
+            {
+                Debug.WriteLine(item.name);
+            }
+            api.updateOrder(_ordersSelectedItem);
+            getUserOrders();
         }
         public async void deleteOrder()
         {
             responseMsg = await api.deleteOrder(ordersSelectedItem.ID);
-            for (int i = 0; i < _orders.Count; i++)
-            {
-                if(_orders[i].ID == ordersSelectedItem.ID)
-                {
-                    _orders.RemoveAt(i);
-                    break;
-                }
-            }
+            getUserOrders();
         }
         public async void getItems()
         {
@@ -336,13 +365,14 @@ namespace WpfApp1
         }
         public async void deleteItem()
         {
-            string id = "1";
-            _responseMsg = await api.deleteItem(id);
+            Item item = SelectedItem;
+            _responseMsg = await api.deleteItem(item.ID);
+            items = await api.getAllItems();
         }
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)
         {
-            Debug.WriteLine(name);
+          //  Debug.WriteLine(name);
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(name));
             handler(this, new PropertyChangedEventArgs("ErrorText"));
